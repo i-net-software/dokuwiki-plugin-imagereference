@@ -111,7 +111,7 @@ class syntax_plugin_imagereference_imgref extends DokuWiki_Syntax_Plugin {
                     $refNumber = "##";
                 }
 
-                $renderer->doc .= '<a href="'.wl($data['page']).'#'.$data['type'].'_'.cleanID($data['caprefname']).'">'.$this->getLang($data['type'].'full').'&nbsp;'.$refNumber.'</a>';
+                $renderer->doc .= '<a href="'.(cleanID($data['page'])!=$ID?wl($data['page']):'').'#'.$data['type'].'_'.cleanID($data['caprefname']).'">'.$this->getLang($data['type'].'full').'&nbsp;'.$refNumber.'</a>';
                 return true;
 
             case 'latex' :

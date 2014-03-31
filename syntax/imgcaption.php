@@ -132,6 +132,16 @@ class syntax_plugin_imagereference_imgcaption extends DokuWiki_Syntax_Plugin {
 
         switch($mode) {
             case 'xhtml' :
+
+				/** allow other plugins to inject different caption and subcaption tags */
+				if ( is_callable(array($renderer, 'imageCaptionTags') ) ) {
+					if ( ($tags = $renderer->imageCaptionTags($this)) != null ) {
+						list( $this->captionStart, $this->captionEnd, $this->underCaptionStart, $this->underCaptionEnd ) = $tags;
+					}
+				} else {
+					$renderer->doc .= "Cannot render Caption Tags";
+				}
+            
                 /** @var Doku_Renderer_xhtml $renderer */
                 switch($case) {
                     case 'caption_open' :
@@ -297,8 +307,10 @@ class syntax_plugin_imagereference_imgcaption extends DokuWiki_Syntax_Plugin {
      * @var string $captionStart opening tag of caption, image/table dependent
      * @var string $captionEnd closing tag of caption, image/table dependent
      */
-    protected $captionStart = '<span id="%s" class="imgcaption%s">';
-    protected $captionEnd   = '</span>';
+    protected $captionStart      = '<span id="%s" class="imgcaption%s">';
+    protected $captionEnd        = '</span>';
+    protected $underCaptionStart = '<span class="undercaption">';
+    protected $underCaptionEnd   = '</span>';
 
     /**
      * Create html of opening of caption wrapper
@@ -323,11 +335,11 @@ class syntax_plugin_imagereference_imgcaption extends DokuWiki_Syntax_Plugin {
      */
     protected function _capend($data) {
         return DOKU_LF
-                .'<span class="undercaption">'.DOKU_LF
+                .$this->underCaptionStart.DOKU_LF
                     .DOKU_TAB.$this->getLang($data['type'].'short').' '.$data['refnumber'].($data['caption'] ? ': ' : '')
                     .' '.hsc($data['caption'])
                     .' <a href=" "><span></span></a>'.DOKU_LF
-                .'</span>'.DOKU_LF
+                .$this->underCaptionEnd.DOKU_LF
             . $this->captionEnd;
     }
 }
