@@ -133,14 +133,12 @@ class syntax_plugin_imagereference_imgcaption extends DokuWiki_Syntax_Plugin {
         switch($mode) {
             case 'xhtml' :
 
-				/** allow other plugins to inject different caption and subcaption tags */
-				if ( is_callable(array($renderer, 'imageCaptionTags') ) ) {
-					if ( ($tags = $renderer->imageCaptionTags($this)) != null ) {
-						list( $this->captionStart, $this->captionEnd, $this->underCaptionStart, $this->underCaptionEnd ) = $tags;
-					}
-				} else {
-					$renderer->doc .= "Cannot render Caption Tags";
-				}
+                /** allow other plugins to inject different caption and subcaption tags */
+                if ( is_callable(array($renderer, 'imageCaptionTags') ) ) {
+                    if ( ($tags = $renderer->imageCaptionTags($this)) != null ) {
+                        list( $this->captionStart, $this->captionEnd, $this->underCaptionStart, $this->underCaptionEnd ) = $tags;
+                    }
+                }
             
                 /** @var Doku_Renderer_xhtml $renderer */
                 switch($case) {
